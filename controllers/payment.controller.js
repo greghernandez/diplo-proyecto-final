@@ -1,4 +1,4 @@
-const PAYMENT_FILE_PATH = 'payment-generated';
+const PAYMENT_FILE_PATH = 'payment-generated.txt';
 const faker = require('faker');
 const fs = require('fs');
 const LINE_ENDING = require('os').EOL;
@@ -6,8 +6,11 @@ const LINE_ENDING = require('os').EOL;
 module.exports = {
     create: function (req, res) {
         const fd = fs.openSync(PAYMENT_FILE_PATH, 'a');
-        fs.appendFileSync(fd, faker.commerce.price() + LINE_ENDING, 'utf8');
-        res.status(201).send();
+        fs.appendFile(fd, faker.commerce.price() + LINE_ENDING, 'utf8', () => {
+            fs.close(fd, () => {
+                res.status(201).send();
+            });
+        })
     },
 
     applyDiscount: function (req, res) {
@@ -16,7 +19,7 @@ module.exports = {
     },
 
     getPromos: function (req, res) {
-        req.json([
+        res.json([
             {name: "BUENFIN"},
             {name: "HOTSALE"},
             {name: "CYBERMONDAY"},

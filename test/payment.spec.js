@@ -30,20 +30,20 @@ describe('payment check', () => {
         if (agent) {
             agent.close();
         }
-        done();
         utils.removeFile(PAYMENT_FILE_PATH)
           .then(() => done() )
     });
 
     it('Should generate an random price', (done) => {
         payment.create(req, res);
-        setTimeout(() => {
-            utils.getFromFile(PAYMENT_FILE_PATH)
-                .then(data => {
-                    data.length.should.eql(1);
-                    done();
-                })
-        }, 500);
+        utils.getFromFile(PAYMENT_FILE_PATH)
+            .then(data => {
+                data.length.should.eql(1);
+                done();
+            })
+            .catch(err => {
+                done(err);
+            })
     });
 
     it('Should generate 5 random prices', done => {
@@ -51,15 +51,13 @@ describe('payment check', () => {
         for (let i = 0; i < n; i++) {
             payment.create(req, res);
         }
-        setTimeout(() => {
-            utils.getFromFile(PAYMENT_FILE_PATH)
-                .then(data => {
-                    data.length.should.eql(n);
-                    const uniqKeys = uniq(data);
-                    uniqKeys.length.should.eql(data.length);
-                    done();
-                })
-        }, 500);
+        utils.getFromFile(PAYMENT_FILE_PATH)
+            .then(data => {
+                data.length.should.eql(n);
+                const uniqKeys = uniq(data);
+                uniqKeys.length.should.eql(data.length);
+                done();
+            })
     });
 
 
@@ -69,6 +67,9 @@ describe('payment check', () => {
             .then(promos => {
                 promos.body.length.should.eql(5);
                 done();
+            })
+            .catch(err => {
+                done(err);
             })
     });
 });
