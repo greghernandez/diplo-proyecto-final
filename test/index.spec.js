@@ -36,13 +36,14 @@ describe('express_authentication', () => {
 
     it('Should generate an API key and add it to file', (done) => {
         keyStore(req, res);
-        setTimeout(() => {
             utils.getKeysFromFile()
                 .then(data => {
                     data.length.should.eql(1);
                     done();
                 })
-        }, 500);
+                .catch(err => {
+                    done(err);
+                })
     });
 
     it('Should generate 5 unique API Keys', done => {
@@ -50,7 +51,6 @@ describe('express_authentication', () => {
         for (let i = 0; i < n; i++) {
             keyStore(req, res);
         }
-        setTimeout(() => {
             utils.getKeysFromFile()
                 .then(data => {
                     data.length.should.eql(n);
@@ -58,7 +58,6 @@ describe('express_authentication', () => {
                     uniqKeys.length.should.eql(data.length);
                     done();
                 })
-        }, 500);
     });
 
 
