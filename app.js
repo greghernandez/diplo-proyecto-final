@@ -4,9 +4,10 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
-var tasksRouter = require('./routes/tasks');
 var authRouter = require('./routes/auth');
+var operationsRouter = require('./routes/operations');
 var paymentRouter = require('./routes/payment');
+var tasksRouter = require('./routes/tasks');
 
 var app = express();
 
@@ -19,10 +20,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/auth', authRouter);
 app.use('/', indexRouter);
-app.use('/tasks', tasksRouter);
+app.use('/auth', authRouter);
+app.use('/operations', operationsRouter)
 app.use('/payment', paymentRouter);
+app.use('/tasks', tasksRouter);
 
 
 module.exports = app;
