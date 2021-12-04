@@ -63,6 +63,14 @@ const removeFile = (path) => {
     })
 };
 
+const authenticate = (agent)  =>{
+    const key = agent.get('/auth').then((({body: {apiKey}}) => {
+        return apiKey;
+    }))
+    return key;
+}
+
+
 module.exports = {
     readFile,
     removeFile,
@@ -71,4 +79,5 @@ module.exports = {
     generateKeysFile,
     getFromFile,
     generatePaymentFile,
+    authenticate
 };
