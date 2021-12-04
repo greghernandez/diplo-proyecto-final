@@ -1,0 +1,10 @@
+version: '2'
+services:
+  express-backend:
+    container_name: express-backend-diplo
+    image: diplo/express-backend:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
