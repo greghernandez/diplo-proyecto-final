@@ -14,15 +14,21 @@ const Promise = require('bluebird');
 chai.use(chaiHttp);
 
 describe('payment check', () => {
-    let req, res, next, agent;
+    let req, res, next, agent, apiKey;
 
     beforeEach((done) => {
+        agent = chai.request.agent(server);
         req = new Request();
         res = new Response();
         next = sinon.stub();
+
         utils.generatePaymentFile()
             .then(() => {
-                done();
+                apiKey = utils.authenticate(agent).then((key) => {
+                    apiKey = key;
+                    agent.set('x-api-key', apiKey)
+                    done();
+                })
             })
     });
 
@@ -64,6 +70,7 @@ describe('payment check', () => {
     it('Should return 5 promo codes', done => {
         chai.request(server)
             .get('/payment/promos')
+            .set('x-api-key', apiKey)
             .then(promos => {
                 promos.body.length.should.eql(5);
                 done();
