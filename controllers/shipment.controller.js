@@ -99,7 +99,7 @@ module.exports = {
         // Get status from the request
         const status = req.body.status;
 
-        if (!status) res.status(204).send({ message: 'Status is required' });
+        if (!status) res.status(400).send({ message: 'Status is required' });
 
         // Read the file
         const fd = fs.openSync(SHIPMENT_FILE_PATH, 'r');

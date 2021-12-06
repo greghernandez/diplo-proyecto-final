@@ -14,7 +14,6 @@ describe('operations endpoints test', () => {
 
     beforeEach((done) => {
         agent = chai.request.agent(server);
-        console.log('beforeEach', agent);
 
         apiKey = utils.authenticate(agent).then((key) => {
             apiKey = key;
