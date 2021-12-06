@@ -70,6 +70,15 @@ const authenticate = (agent)  =>{
     return key;
 }
 
+const generateFile = (path, data) => {
+    return new Promise((resolve, reject) => {
+        fs.writeFile(path, data || '', 'utf8', (err => {
+            if(err) return reject();
+            else resolve();
+        }))
+    })
+};
+
 
 module.exports = {
     readFile,
@@ -79,5 +88,6 @@ module.exports = {
     generateKeysFile,
     getFromFile,
     generatePaymentFile,
-    authenticate
+    authenticate,
+    generateFile
 };
