@@ -79,4 +79,21 @@ describe('payment check', () => {
                 done(err);
             })
     });
+
+    it('Discount - Should discount an amount to prices', done => {
+        payment.create(req, res)
+        chai.request(server)
+            .post('/payment/discount')
+            .set('x-api-key', apiKey)
+            .send({ discountAmount: 10 })
+            .then(response => {
+                console.log(response.body);
+                response.body.data.should.be.a('array');
+                response.should.have.status(200);
+                done();
+            })
+            .catch(err => {
+                done(err);
+            })
+    })
 });
