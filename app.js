@@ -9,6 +9,9 @@ var operationsRouter = require('./routes/operations');
 var paymentRouter = require('./routes/payment');
 var shipmentRouter = require('./routes/shipment');
 var tasksRouter = require('./routes/tasks');
+// Sentry
+var Sentry = require("@sentry/node");
+var Tracing = require("@sentry/tracing");
 
 // DataDog
 var dd_options = {
@@ -19,6 +22,27 @@ var dd_options = {
 var connect_datadog = require('connect-datadog')(dd_options);
 
 var app = express();
+Sentry.init({
+    dsn: "https://24d3f621be6c40ac8e39f5ddfdebb8aa@o1059739.ingest.sentry.io/6096043",
+    integrations: [
+        // enable HTTP calls tracing
+        new Sentry.Integrations.Http({ tracing: true }),
+        // enable Express.js middleware tracing
+        new Tracing.Integrations.Express({ app }),
+    ],
+
+    // Set tracesSampleRate to 1.0 to capture 100%
+    // of transactions for performance monitoring.
+    // We recommend adjusting this value in production
+    tracesSampleRate: 1.0,
+});
+
+// RequestHandler creates a separate execution context using domains, so that every
+// transaction/span/breadcrumb is attached to its own Hub instance
+app.use(Sentry.Handlers.requestHandler());
+// TracingHandler creates a trace for every incoming request
+app.use(Sentry.Handlers.tracingHandler());
+
 
 
 // view engine setup
@@ -38,6 +62,13 @@ app.use('/operations', operationsRouter)
 app.use('/payment', paymentRouter);
 app.use('/shipments', shipmentRouter);
 app.use('/tasks', tasksRouter);
+
+app.get("/debug-sentry", function mainHandler(req, res) {
+    throw new Error("Sentry error test!");
+});
+
+// The error handler
+app.use(Sentry.Handlers.errorHandler());
 
 
 module.exports = app;
