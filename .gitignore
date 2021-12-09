@@ -1,2 +1,6 @@
 /node_modules
 unit.xml
+
+# Temp db files
+valid-keys.txt
+shipment-generated.txt
