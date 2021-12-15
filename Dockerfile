@@ -1,6 +1,10 @@
 FROM node:14-alpine
 
+RUN apk add --no-cache tini
+ENV NODE_ENV=production
+
 # Create app directory
+RUN mkdir -p /usr/src/app && chown node /usr/src/app
 WORKDIR /usr/src/app
 
 # Install app dependencies
@@ -14,4 +18,6 @@ COPY . .
 
 EXPOSE 8000
 
+USER node
+ENTRYPOINT ["/sbin/tini", "--"]
 CMD [ "npm", "start" ]
