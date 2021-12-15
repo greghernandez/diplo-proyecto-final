@@ -43,5 +43,4 @@ jobs:
           heroku_api_key: ${{secrets.HEROKU_API_KEY}}
           heroku_app_name: "diplo-pf" #Must be unique in Heroku
           heroku_email: "gregoryarthur13@gmail.com"
-          usedocker: true
   
