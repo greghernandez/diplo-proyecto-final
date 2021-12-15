@@ -9,6 +9,13 @@ var operationsRouter = require('./routes/operations');
 var paymentRouter = require('./routes/payment');
 var shipmentRouter = require('./routes/shipment');
 var tasksRouter = require('./routes/tasks');
+
+const tracer = require('dd-trace').init({
+    service: 'node-express', // shows up as Service in Datadog UI
+    hostname: 'agent', // references the `agent` service in docker-compose.yml
+    debug: true
+ }) // useful for seeing request/response and any logs
+
 // Sentry
 var Sentry = require("@sentry/node");
 var Tracing = require("@sentry/tracing");
@@ -22,6 +29,10 @@ var dd_options = {
 var connect_datadog = require('connect-datadog')(dd_options);
 
 var app = express();
+
+// enable express integration
+tracer.use('express')
+
 Sentry.init({
     dsn: "https://24d3f621be6c40ac8e39f5ddfdebb8aa@o1059739.ingest.sentry.io/6096043",
     integrations: [
