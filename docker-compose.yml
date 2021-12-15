@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 services:
   express-backend:
     container_name: express-backend-diplo
@@ -10,11 +10,11 @@ services:
       - "8000:8000"
   datadog:
     container_name: dd-agent-datadog
-    image: datadog/docker-dd-agent
+    image: datadog/agent
     environment:
-     - DD_API_KEY=02bca40cdf633b6ce04ec4776d5b5123
-     - DD_SITE="datadoghq.com"
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - /proc/:/host/proc/:ro
-      - /sys/fs/cgroup/:/host/sys/fs/cgroup:ro
+      - DD_API_KEY=02bca40cdf633b6ce04ec4776d5b5123
+      - DD_APM_ENABLED=true
+      - DD_LOGS_ENABLED=true
+      - DD_PROCESS_AGENT_ENABLED=true
+      - DD_HOSTNAME=dd-agent-diplo
+      - DD_LOG_LEVEL=debug
